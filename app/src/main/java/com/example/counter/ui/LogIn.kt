@@ -1,5 +1,6 @@
 package com.example.counter.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,18 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.counter.ui.theme.CounterTheme
 
 @Composable
-fun LogIn(){
-    val context = LocalContext.current
-    var email by remember {
-        mutableStateOf("")
+fun LogIn(
+    state: LogInState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit
+){
+    SideEffect {
+        Log.d("TAG", "Email: ${state.email}\nPassword: ${state.password}")
     }
 
-    var password by remember {
-        mutableStateOf("")
-    }
+    val context = LocalContext.current
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -42,22 +46,32 @@ fun LogIn(){
             .fillMaxSize()
     ) {
         TextField(
-            value = email,
+            value = state.email,
             placeholder = {
                           Text(text = "Email")
             },
-            onValueChange = {email = it},
+            onValueChange = {email -> onEmailChange(email)},
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(20.dp))
 
         TextField(
-            value = password,
+            value = state.firstName,
+            placeholder = {
+                Text(text = "First Name")
+            },
+            onValueChange = {},
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextField(
+            value = state.password,
             placeholder = {
                           Text(text = "Password")
             },
-            onValueChange = {password = it},
+            onValueChange = {password -> onPasswordChange(password)},
             modifier = Modifier.fillMaxWidth()
 
         )
@@ -68,10 +82,10 @@ fun LogIn(){
             onClick = {
                 Toast.makeText(
                     context,
-                    "Email : $email \npassword : $password",
+                    "Email : ${state.email} \nPassword : ${state.password}\nFirst Name : ${state.firstName}",
                     Toast.LENGTH_SHORT).show()
             },
-//            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
             ) {
             Text(
                 text = "SUBMIT"
@@ -84,6 +98,6 @@ fun LogIn(){
 @Composable
 fun LogInPreview(){
     CounterTheme {
-        LogIn()
+//        LogIn( state = v)
     }
 }

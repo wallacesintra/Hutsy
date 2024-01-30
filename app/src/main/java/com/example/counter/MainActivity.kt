@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,8 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.counter.ui.theme.CounterTheme
 import com.example.counter.ui.LogIn
+import com.example.counter.ui.LogInState
+import com.example.counter.ui.LogInViewModel
 
 class MainActivity : ComponentActivity() {
+    val viewModel by viewModels<LogInViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,7 +41,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LogIn()
+                    LogIn(
+                        state = viewModel.state,
+                        onEmailChange = {email -> viewModel.onUpdateEmail(email)},
+                        onPasswordChange = {password -> viewModel.onUpdatePassword(password)}
+                    )
                 }
             }
         }
